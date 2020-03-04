@@ -402,7 +402,11 @@ namespace Assets.Oculus.VR.Editor
 		{
 			OVRPlatformTool.log = string.Empty;
 			SetDirtyOnGUIChange();
-			var lintCount = OVRLint.RunCheck();
+			var lintCount = 0;
+			if (OVRPlatformToolSettings.RunOvrLint)
+			{
+				lintCount = OVRLint.RunCheck();
+			}
 			if (lintCount != 0)
 			{
 				OVRPlatformTool.log += lintCount.ToString() + " lint suggestions are found. \n" +
@@ -501,7 +505,7 @@ namespace Assets.Oculus.VR.Editor
 			ovrPlatUtilProcess.OutputDataReceived += new DataReceivedEventHandler(
 				(s, e) =>
 				{
-					if (e.Data.Length != 0 && !e.Data.Contains("\u001b"))
+					if (e.Data != null && e.Data.Length != 0 && !e.Data.Contains("\u001b"))
 					{
 						OVRPlatformTool.log += e.Data + "\n";
 					}
@@ -602,7 +606,7 @@ namespace Assets.Oculus.VR.Editor
 				ovrPlatUtilProcess.OutputDataReceived += new DataReceivedEventHandler(
 					(s, e) =>
 					{
-						if (e.Data.Length != 0 && !e.Data.Contains("\u001b"))
+						if (e.Data != null && e.Data.Length != 0 && !e.Data.Contains("\u001b"))
 						{
 							OVRPlatformTool.log += e.Data + "\n";
 						}
